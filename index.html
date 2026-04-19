@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- V29.0.1-STABLE - Vercel Edition -->
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  
+  <!-- 1. Resource Hints -->
+  <link rel="preconnect" href="https://mc.yandex.ru" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+  
+  <!-- LOCAL FONT PRELOAD (Eliminates Google Fonts RTT) -->
+  <link rel="preload" as="font" href="/fonts/inter-bold.woff2" type="font/woff2" crossorigin />
+  <link rel="preload" as="font" href="/fonts/inter-regular.woff2" type="font/woff2" crossorigin />
+
+  <!-- DEFERRED TRACKING (Optimized for Verification & Performance) -->
+  <script>
+    window.addEventListener('load', function() {
+      // 1. Google Ads (Reduced delay for Verification)
+      setTimeout(function() {
+        var gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18101923754';
+        document.head.appendChild(gaScript);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-18101923754');
+        
+        // Page view conversion
+        gtag('event', 'conversion', {
+            'send_to': 'AW-18101923754/Lt42CMOlv54cEKrf1bdD',
+            'value': 1.0,
+            'currency': 'USD'
+        });
+      }, 1000);
+
+      // 2. Yandex Metrika (Kept for stats)
+      setTimeout(function() {
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+        ym(108558502, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true, ecommerce:"dataLayer" });
+      }, 2500); 
+    });
+  </script>
+
+  <meta name="theme-color" content="#186a77" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/logo.jpg" />
+
+  <title>OrbiTrip | Private Transfers in Georgia (Kutaisi, Tbilisi, Batumi)</title>
+  <meta name="version" content="V29.0.0-STABLE">
+  <meta name="description" content="Premium private transfers across Georgia. Reliable trips from Kutaisi Airport, Tbilisi, and Batumi. No deposit, child seats included." />
+  
+  <style id="nuclear-critical-css">
+    /* LOCAL FONTS — eliminates Google Fonts RTT */
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/inter-regular.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/fonts/inter-bold.woff2') format('woff2');
+    }
+
+    /* INSTANT MOUNT — Deep Void Background */
+    :root { --primary: #f27c38; --primary-dark: #d65d1d; }
+    html, body { background: #0f172a; margin: 0; padding: 0; min-height: 100%; color: white; font-family: 'Inter', sans-serif; }
+    #root { opacity: 0; transition: opacity 0.5s ease-in; }
+    #root.mounted { opacity: 1; }
+    
+    /* CRITICAL UI HIDDEN TO PREVENT CLS */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+
+  <script type="module" src="/src/index.tsx"></script>
+</head>
+
+<body>
+  <noscript><div><img src="https://mc.yandex.ru/watch/108558502" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
+  <div id="root" role="main"></div>
+  <div id="calendar-portal"></div>
+
+  <script>
+    // Signals React has taken control
+    window.addEventListener('orbitrip-ready', function() {
+      document.getElementById('root').classList.add('mounted');
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            var u = document.createElement('script'); u.defer = true; u.src = "https://cloud.umami.is/script.js"; u.setAttribute('data-website-id', "56e90bda-9e9e-4001-93ee-21f592a2e1eb"); document.head.appendChild(u);
+        }, 3000);
+    });
+  </script>
+</body>
+</html>

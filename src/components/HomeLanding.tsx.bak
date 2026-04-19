@@ -1,0 +1,308 @@
+import React from 'react';
+import { Language } from '../types';
+import { 
+    MapPin, 
+    Search, 
+    User, 
+    FileText, 
+    MessageCircle, 
+    Mountain, 
+    ShieldCheck, 
+    Droplets, 
+    Clock, 
+    ArrowRight, 
+    Star, 
+    LayoutList, 
+    Zap, 
+    Tag, 
+    MoveRight,
+    Navigation
+} from 'lucide-react';
+import { getStartingPrice } from '../services/pricingEngine';
+
+interface HomeLandingProps {
+  language: Language;
+  onRouteSelect: (from: string, to: string, dist: number) => void;
+  onTourSelect: (id: string) => void;
+}
+
+const SVGS = {
+    Google: () => (
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-1 .67-2.28 1.07-3.71 1.07-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+            <path fill="#FBBC05" d="M5.84 14.11c-.22-.67-.35-1.39-.35-2.11s.13-1.44.35-2.11V7.05H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.95l3.66-2.84z" />
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.05l3.66 2.84c.87-2.6 3.3-4.51 6.16-4.51z" />
+        </svg>
+    ),
+    Instagram: () => (
+        <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="white" strokeWidth="2"/>
+            <path d="M17.5 6.51L17.51 6.49889" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+};
+
+const HomeLanding: React.FC<HomeLandingProps> = ({ language, onRouteSelect, onTourSelect }) => {
+  const isEn = language === Language.EN;
+
+  const CORE_BENEFITS = [
+    { titleEn: "Zero Prepayment", titleRu: "Без предоплаты", descEn: "Trust model: Pay at the end", descRu: "Оплата только в конце пути", icon: <ShieldCheck className="w-6 h-6" /> },
+    { titleEn: "Stop Anywhere", titleRu: "Остановки везде", descEn: "Free stops for photos & coffee", descRu: "Бесплатно для фото и кофе", icon: <MapPin className="w-6 h-6" /> },
+    { titleEn: "Wait for Free", titleRu: "Ожидание бесплатно", descEn: "No charges for sightseeing time", descRu: "Ждем у достопримечательностей", icon: <Clock className="w-6 h-6" /> },
+    { titleEn: "Fixed Pricing", titleRu: "Фикс. Цена", descEn: "No hidden costs, ever", descRu: "Никаких скрытых доплат", icon: <Tag className="w-6 h-6" /> },
+    { titleEn: "Child Seats", titleRu: "Детские кресла", descEn: "Provided completely free", descRu: "Установим бесплатно", icon: <LayoutList className="w-6 h-6" /> },
+    { titleEn: "Bottled Water", titleRu: "Свежая вода", descEn: "Complimentary for everyone", descRu: "Бутылка воды каждому", icon: <Droplets className="w-6 h-6" /> },
+    { titleEn: "Local Drivers", titleRu: "Местные водители", descEn: "Certified professional experts", descRu: "Водители знают всё", icon: <Navigation className="w-6 h-6" /> },
+    { titleEn: "Verified Fleet", titleRu: "Вер. автопарк", descEn: "Clean and safe vehicles only", descRu: "Только чистые и без. авто", icon: <ShieldCheck className="w-6 h-6" /> }
+  ];
+
+  const TRENDING_ROUTES = [
+    { from: 'Tbilisi', to: 'Batumi', dist: 370, mount: false },
+    { from: 'Tbilisi', to: 'Gudauri', dist: 120, mount: true },
+    { from: 'Tbilisi', to: 'Kazbegi', dist: 155, mount: true },
+    { from: 'Kutaisi', to: 'Tbilisi', dist: 230, mount: false },
+    { from: 'Batumi', to: 'Tbilisi', dist: 370, mount: false },
+    { from: 'Tbilisi', to: 'Borjomi', dist: 160, mount: true }
+  ];
+
+  const HOW_IT_WORKS_STEPS = [
+      { num: "01", titleEn: "Choose Route", titleRu: "Маршрут", descEn: "Enter your pick-up and drop-off locations.", descRu: "Укажите начальную и конечную точки.", icon: <MapPin size={32} /> },
+      { num: "02", titleEn: "See Details", titleRu: "Детали", descEn: "View distance, time and transparent pricing.", descRu: "Посмотрите расстояние и стоимость.", icon: <Search size={32} /> },
+      { num: "03", titleEn: "Pick Driver", titleRu: "Водитель", descEn: "Browse photos, ratings and reviews.", descRu: "Просмотрите фото и отзывы.", icon: <User size={32} /> },
+      { num: "04", titleEn: "Book", titleRu: "Брони", descEn: "Reserve with zero prepayment.", descRu: "Забронируйте без предоплаты.", icon: <FileText size={32} /> },
+      { num: "05", titleEn: "Connect", titleRu: "Связь", descEn: "Your driver contacts you directly.", descRu: "Водитель свяжется с вами.", icon: <MessageCircle size={32} /> },
+      { num: "06", titleEn: "Enjoy", titleRu: "Поездка", descEn: "Sit back and explore Georgia.", descRu: "Наслаждайтесь Грузией!", icon: <Mountain size={32} /> },
+  ];
+
+  return (
+    <div className="font-sans text-slate-800 relative z-20">
+      
+      {/* 1. CORE BENEFITS (VALUE PROPS) */}
+      <div className="w-full px-0 -mt-12 md:-mt-32 relative z-30 mb-20 md:mb-32">
+          <div className="bg-white/95 backdrop-blur-3xl rounded-none md:rounded-[48px] shadow-none md:shadow-[0_48px_80px_-16px_rgba(0,0,0,0.12)] p-4 md:p-6 border-y md:border border-slate-100">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                  {CORE_BENEFITS.map((b, i) => (
+                      <div key={i} className="flex flex-col items-center text-center py-8 px-4 rounded-[32px] hover:bg-slate-50 transition-all duration-500 group relative overflow-hidden">
+                          <div className="relative z-10 w-12 h-12 md:w-16 md:h-16 rounded-[20px] bg-amber-50 flex items-center justify-center text-amber-500 mb-6 transition-all duration-700 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white">
+                              {b.icon}
+                          </div>
+                          <p className="relative z-10 text-xs md:text-base font-black text-slate-900 mb-1.5 uppercase tracking-tighter italic leading-none">{isEn ? b.titleEn : b.titleRu}</p>
+                          <p className="relative z-10 text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-60 group-hover:opacity-100 transition-opacity whitespace-pre-wrap">{isEn ? b.descEn : b.descRu}</p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </div>
+
+      {/* 2. TRENDING ROUTES */}
+      <div className="max-w-7xl mx-auto px-0 md:px-4 mb-32">
+          <div className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6 px-4 md:px-0">
+              <div className="max-w-xl">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 rounded-full mb-3">
+                      <Zap size={10} className="text-amber-500" />
+                      <span className="text-[9px] font-black text-amber-500 uppercase tracking-widest">Popular Destinations</span>
+                  </div>
+                  <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-none italic uppercase">
+                      {isEn ? "Trending" : "Популярно"}<br/>
+                      <span className="text-amber-500 not-italic">{isEn ? "Connections" : "Направления"}</span>
+                  </h2>
+              </div>
+              <p className="text-slate-400 text-xs md:text-sm font-bold uppercase tracking-widest opacity-60 max-w-xs md:text-right">
+                  {isEn ? "Direct access to high-demand routes with verified drivers and fixed pricing" : "Прямой доступ к самым популярным маршрутам Грузии"}
+              </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-8">
+              {TRENDING_ROUTES.map((route, i) => (
+                  <div 
+                    key={i} 
+                    onClick={() => onRouteSelect(route.from, route.to, route.dist)}
+                    className="p-6 md:p-8 bg-white border border-slate-100 rounded-none md:rounded-[40px] shadow-sm hover:shadow-2xl transition-all duration-700 group cursor-pointer relative overflow-hidden border-b-8 border-b-slate-50 hover:border-b-amber-500"
+                  >
+                      <div className="flex justify-between items-start mb-10 relative z-10">
+                          <div className="flex flex-col gap-2">
+                             <div className="flex items-center gap-3">
+                                 <h4 className="text-2xl font-black text-slate-900 group-hover:text-amber-500 transition-colors uppercase italic tracking-tighter leading-none">{route.from}</h4>
+                                 <MoveRight className="text-slate-200 group-hover:text-amber-500 group-hover:translate-x-2 transition-all duration-700" size={24} strokeWidth={3} />
+                                 <h4 className="text-2xl font-black text-slate-900 group-hover:text-amber-500 transition-colors uppercase italic tracking-tighter leading-none">{route.to}</h4>
+                             </div>
+                             <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">
+                                 <Clock size={12} /> ~{Math.ceil(route.dist / 50)} {isEn ? 'HRS JOURNEY' : 'ЧАСА В ПУТИ'}
+                             </div>
+                          </div>
+                          <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-300 group-hover:bg-amber-500 group-hover:text-white transition-all transform group-hover:rotate-45 duration-700">
+                             <Navigation size={20} />
+                          </div>
+                      </div>
+
+                      <div className="flex items-center justify-between relative z-10">
+                          <div className="flex flex-col gap-1">
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Starting From</span>
+                              <div className="flex items-center gap-3">
+                                  <span className="text-3xl font-black text-slate-900 group-hover:text-amber-500 transition-colors">{getStartingPrice(route.dist, route.mount)} GEL</span>
+                                  <span className="px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">FIXED</span>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-2 text-amber-500 font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-700">
+                              {isEn ? "Book" : "Заказ"} <ArrowRight size={14} strokeWidth={3} />
+                          </div>
+                      </div>
+                  </div>
+              ))}
+          </div>
+      </div>
+      
+      {/* 3. HOW IT WORKS */}
+      <div className="py-16 md:py-32 relative overflow-hidden bg-slate-50">
+          <div className="max-w-7xl mx-auto px-4 relative z-10">
+              <div className="mb-16 md:mb-24 text-center">
+                  <h2 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter leading-none mb-6">
+                      {isEn ? "How it works" : "Как это работает"}
+                  </h2>
+                  <p className="text-slate-400 text-sm md:text-lg font-bold max-w-2xl mx-auto uppercase tracking-widest opacity-60">
+                      {isEn ? "Simple 6-step process to book your reliable transfer" : "Всего 6 простых шагов к вашей идеальной поездке"}
+                  </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-10 max-w-6xl mx-auto">
+                  {HOW_IT_WORKS_STEPS.map((step, i) => (
+                      <div key={i} className="relative group p-6 md:p-10 bg-white border-y md:border border-slate-100 rounded-none md:rounded-[40px] hover:shadow-xl transition-all duration-700 hover:-translate-y-2 overflow-hidden flex flex-col items-center text-center md:items-start md:text-left">
+                          <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-200 font-black text-3xl mb-10 transition-all duration-700 group-hover:text-amber-500/20">
+                              {step.num}
+                          </div>
+                          <div className="mb-8 p-4 bg-slate-50 rounded-[24px] w-fit group-hover:bg-amber-50 transition-colors duration-700">
+                              <div className="text-amber-500 transition-transform duration-700 group-hover:scale-110">
+                                 {step.icon}
+                              </div>
+                          </div>
+                          <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-4 tracking-tighter italic uppercase leading-none">{isEn ? step.titleEn : step.titleRu}</h3>
+                          <p className="text-base text-slate-400 leading-relaxed font-bold uppercase tracking-wide opacity-80">{isEn ? step.descEn : step.descRu}</p>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </div>
+
+      {/* 4. EXPERIENCE SHOWCASE */}
+      <div className="max-w-7xl mx-auto px-0 md:px-4 mb-32 -mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8">
+              <div className="group relative h-[450px] rounded-none md:rounded-[48px] overflow-hidden shadow-2xl border border-slate-100">
+                  <img src="/airport_meeting.webp" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Airport Meeting" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute bottom-10 left-10 right-10 text-white">
+                      <h4 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{isEn ? 'Personal Meeting' : 'Личная Встреча'}</h4>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest opacity-80">{isEn ? 'Warm welcome at the airport' : 'Теплый прием в аэропорту'}</p>
+                  </div>
+              </div>
+              <div className="group relative h-[450px] rounded-none md:rounded-[48px] overflow-hidden shadow-2xl md:translate-y-12 transition-transform border border-slate-100">
+                  <img src="/luggage_help.webp" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Luggage Assistance" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute bottom-10 left-10 right-10 text-white">
+                      <h4 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{isEn ? 'Luggage Assistance' : 'Помощь с багажом'}</h4>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest opacity-80">{isEn ? 'Our drivers help with your luggage' : 'Наши водители помогут с вашим багажом'}</p>
+                  </div>
+              </div>
+              <div className="group relative h-[450px] rounded-none md:rounded-[48px] overflow-hidden shadow-2xl border border-slate-100">
+                  <img src="/scenic_drive.webp" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Scenic Drive" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute bottom-10 left-10 right-10 text-white">
+                      <h4 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{isEn ? 'Comfortable Journey' : 'Комфортная поездка'}</h4>
+                      <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest opacity-80">{isEn ? 'Relax and enjoy the view' : 'Расслабьтесь и наслаждайтесь видом'}</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      {/* 4. RELIABILITY SECTION (IMPROVED VERSION) */}
+      <div className="py-16 md:py-24 bg-white">
+          <div className="max-w-6xl mx-auto px-4">
+              <div className="text-center mb-16">
+                  <h2 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tight uppercase italic leading-none">
+                      {isEn ? "Trusted by thousands" : "Почему выбирают нас"}
+                  </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                  <div className="flex flex-col items-center text-center space-y-4">
+                      <div className="w-16 h-16 rounded-[24px] bg-amber-50 flex items-center justify-center text-amber-500 shadow-sm border border-amber-100">
+                          <ShieldCheck size={32} />
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900 uppercase italic leading-none">{isEn ? "Verified Drivers" : "Проверенные водители"}</h3>
+                      <p className="text-sm font-bold text-slate-400 leading-relaxed uppercase tracking-tight opacity-70">
+                          {isEn ? "Every driver is personally interviewed and every car is checked for safety." : "Каждый водитель проходит проверку, а состояние авто контролируется вручную."}
+                      </p>
+                  </div>
+                  <div className="flex flex-col items-center text-center space-y-4">
+                      <div className="w-16 h-16 rounded-[24px] bg-emerald-50 flex items-center justify-center text-emerald-500 shadow-sm border border-emerald-100">
+                          <Tag size={32} />
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900 uppercase italic leading-none">{isEn ? "Always Fixed Pricing" : "Фиксированная цена"}</h3>
+                      <p className="text-sm font-bold text-slate-400 leading-relaxed uppercase tracking-tight opacity-70">
+                          {isEn ? "Pay what you see. No extra charges for luggage, traffic, or child seats." : "Вы платите ровно столько, сколько видите. Без доплат за багаж или пробки."}
+                      </p>
+                  </div>
+                  <div className="flex flex-col items-center text-center space-y-4">
+                      <div className="w-16 h-16 rounded-[24px] bg-sky-50 flex items-center justify-center text-sky-500 shadow-sm border border-sky-100">
+                          <Navigation size={32} />
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900 uppercase italic leading-none">{isEn ? "Total Route Freedom" : "Свобода маршрута"}</h3>
+                      <p className="text-sm font-bold text-slate-400 leading-relaxed uppercase tracking-tight opacity-70">
+                          {isEn ? "Stop anywhere for photos, coffee, or sightseeing at no extra cost." : "Останавливайтесь у любых достопримечательностей или на кофе бесплатно."}
+                      </p>
+                             <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8">
+                  {[
+                    { name: Sarah M., location: "London, UK", text: isEn ? "Incredible service! Driver was punctual and the car was spotless. Made our trip to Kazbegi unforgettable." : "Невероятный сервис! Водитель был пунктуален. Поездка в Казбеги была незабываемой." },
+                    { name: Marco R., location: "Rome, Italy", text: isEn ? "Best transfer service in Georgia. Fixed prices, no surprises. Highly recommended!" : "Лучший трансфер в Грузии. Фиксированные цены, без сюрпризов. Рекомендую!" },
+                    { name: Elena K., location: "Berlin, DE", text: isEn ? "Clean car, friendly driver, fair price. This is exactly what we needed for our family trip." : "Чистая машина, вежливый водитель, честная цена. То что нужно для семьи." }
+                  ].map((review, i) => (
+                      <div key={i} className="bg-white p-6 md:p-10 rounded-none md:rounded-[40px] shadow-sm border-y md:border border-slate-100 flex flex-col h-full group hover:shadow-xl transition-all duration-700 text-center items-center md:text-left md:items-start">
+                          <p className="text-lg text-slate-900 leading-relaxed mb-12 flex-grow font-black tracking-tight italic uppercase opacity-80">
+                               "{review.text}"
+                          </p>� был пунктуален. Поездка в Казбеги была незабываемой." },
+                    { name: "Marco R.", location: "Rome, Italy", text: isEn ? "Best transfer service in Georgia. Fixed prices, no surprises. Highly recommended!" : "Лучший трансфер в Грузии. Фиксированные цены, без сюрпризов. Рекомендую!" },
+                    { name: "Elena K.", location: "Berlin, DE", text: isEn ? "Clean car, friendly driver, fair price. This is exactly what we needed for our family trip." : "Чистая машина, вежливый водитель, честная цена. То что нужно для семьи." }
+                  ].map((review, i) => (
+                      <div key={i} className="bg-white p-10 rounded-[40px] shadow-sm border border-slate-100 flex flex-col h-full group hover:shadow-xl transition-all duration-700">
+                          <p className="text-lg text-slate-900 leading-relaxed mb-12 flex-grow font-black tracking-tight italic uppercase opacity-80">
+                              "{review.text}"
+                          </p>
+                          <div className="flex items-center gap-4 pt-8 border-t border-slate-50">
+                              <div className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-amber-500 font-black text-lg">
+                                  {review.name[0]}
+                              </div>
+                              <div className="flex flex-col">
+                                  <span className="text-sm font-black text-slate-900 uppercase italic tracking-tighter">{review.name}</span>
+                                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{review.location}</span>
+                              </div>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </div>
+
+      {/* 6. INSTAGRAM CTA */}
+      <div className="py-24 bg-slate-900 text-center relative overflow-hidden">
+          <div className="max-w-4xl mx-auto px-4 relative z-10 flex flex-col items-center">
+              <div className="w-20 h-20 rounded-[28px] bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shadow-2xl mb-10">
+                  <SVGS.Instagram />
+              </div>
+              <h2 className="text-3xl md:text-5xl font-black text-white mb-8 tracking-tighter leading-none uppercase italic">
+                  {isEn ? "Join Our Community" : "Присоединяйтесь"}
+              </h2>
+              <a 
+                href="https://instagram.com/orbitrip.ge" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="group flex items-center gap-4 bg-white text-slate-900 px-10 py-5 rounded-[24px] hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-tight italic"
+              >
+                  @orbitrip.ge <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+              </a>
+          </div>
+      </div>
+    </div>
+  );
+};
+
+export default HomeLanding;

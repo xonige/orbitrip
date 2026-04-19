@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #f27c38; /* Warm Sunset Orange */
+  --primary-contrast: #c2410c; /* Darker orange for text accessibility (WCAG AA+) */
+  --primary-light: #ff9d66;
+  --primary-dark: #d65d1d;
+  --secondary: #1e293b;
+  --accent: #fff7ed;
+  --dark: #0f172a;
+  --surface: #ffffff;
+}
+
+/* App-like Perspective */
+@layer base {
+  html, body {
+    @apply min-h-screen overflow-x-hidden antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  #root {
+    @apply min-h-screen flex flex-col;
+  }
+}
+
+@layer utilities {
+  .mobile-full-width {
+    @apply w-full px-0 mx-0 max-w-none rounded-none !important;
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  
+  .glass-header {
+    @apply backdrop-blur-3xl bg-white/80 border-b border-orange-100/50;
+  }
+
+  .warm-glow {
+    box-shadow: 0 10px 40px -10px rgba(242, 124, 56, 0.2);
+  }
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c7c7c7;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Base Styles */
+body {
+  @apply bg-transparent text-slate-900;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+#global-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: #fffdfa;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(242, 124, 56, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(251, 146, 60, 0.03) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(242, 124, 56, 0.04) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(254, 215, 170, 0.03) 0px, transparent 50%);
+  pointer-events: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* React Datepicker Premium Styling */
+.react-datepicker-popper {
+  z-index: 9999 !important;
+}
+
+.react-datepicker {
+  @apply rounded-3xl border-none shadow-[0_20px_50px_rgba(0,0,0,0.2)] font-sans overflow-hidden !important;
+  background-color: white !important;
+}
+
+.react-datepicker__header {
+  @apply bg-slate-50 border-b border-slate-100 p-4 rounded-t-3xl !important;
+}
+
+.react-datepicker__current-month {
+  @apply text-slate-900 font-black uppercase tracking-tighter text-base italic !important;
+}
+
+.react-datepicker__day-name {
+  @apply text-slate-400 font-bold uppercase tracking-widest text-[10px] !important;
+}
+
+.react-datepicker__day {
+  @apply text-slate-700 font-bold rounded-xl transition-all hover:bg-amber-50 hover:text-amber-600 !important;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-slate-100 text-slate-800 font-bold rounded-full !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  @apply bg-amber-50 text-amber-600 !important;
+}
+
+.react-datepicker__day--disabled {
+  @apply text-slate-200 !important;
+}
+
+.react-datepicker__navigation {
+  @apply top-4 !important;
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply border-slate-400 border-t-2 border-r-2 !important;
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker__month-dropdown-container,
+.react-datepicker__year-dropdown-container {
+  @apply bg-slate-50 rounded-lg px-2 py-1 mx-1 border border-slate-100 font-bold text-xs text-slate-700 !important;
+}
+
+.react-datepicker__month-select,
+.react-datepicker__year-select {
+  @apply bg-transparent outline-none cursor-pointer p-1 !important;
+}
+
+/* Premium Booking Calendar Overrides */
+.booking-calendar-premium {
+  @apply rounded-[32px] border-none shadow-[0_40px_80px_-15px_rgba(0,0,0,0.3)] overflow-hidden !important;
+  font-size: 1rem !important;
+  z-index: 999999 !important;
+}
+
+.booking-calendar-premium .react-datepicker__header {
+  @apply bg-white p-0 border-none !important;
+}
+
+.booking-calendar-premium .react-datepicker__header__custom {
+  @apply px-4 py-4 md:py-5 border-none !important;
+}
+
+.booking-calendar-premium .react-datepicker__day-names {
+  @apply bg-[#f0f0f0] w-full px-2 py-3 flex justify-between rounded-none !important;
+  margin-bottom: 8px !important;
+}
+
+.booking-calendar-premium .react-datepicker__day-name {
+  @apply text-slate-800 text-[13px] md:text-sm font-bold m-0 w-10 md:w-12 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.booking-calendar-premium .react-datepicker__day {
+  width: 2.5rem !important;
+  line-height: 2.5rem !important;
+  font-size: 15px !important;
+  margin: 0.1rem !important;
+}
+@media (min-width: 768px) {
+  .booking-calendar-premium .react-datepicker__day {
+    width: 3rem !important;
+    line-height: 3rem !important;
+    font-size: 16px !important;
+  }
+}
+
+.booking-calendar-premium .react-datepicker__current-month {
+  @apply text-slate-800 text-lg md:text-xl font-black !important;
+}
+
+.booking-calendar-premium .react-datepicker__day--selected {
+  @apply bg-orange-500 rounded-2xl shadow-lg shadow-orange-200 !important;
+}
+
+.booking-calendar-premium .react-datepicker__day:hover {
+  @apply bg-orange-50 text-orange-600 rounded-2xl !important;
+}
+#calendar-portal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999999 !important;
+  pointer-events: none;
+}
+#calendar-portal > * {
+  pointer-events: auto;
+}
+
+/* Portal overlay for mobile calendar - V27 Premium Modal */
+.react-datepicker__portal {
+  background: rgba(15, 23, 42, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+}
+
+.react-datepicker__portal .react-datepicker {
+  width: 100% !important;
+  max-width: 400px !important;
+  height: auto !important;
+  max-height: 90vh !important;
+  border-radius: 32px !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,0.5) !important;
+  overflow-y: auto !important;
+  display: flex;
+  flex-direction: column;
+  background: white !important;
+  animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes modalScaleIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.react-datepicker__portal .react-datepicker__month-container {
+  width: 100% !important;
+  float: none !important;
+}
+
+.react-datepicker__portal .react-datepicker__header {
+  background: white !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.react-datepicker__portal .react-datepicker__month {
+  margin: 0.4rem !important;
+}
+
+.react-datepicker__portal .react-datepicker__week {
+  display: flex !important;
+  justify-content: space-around !important;
+}
+
+.react-datepicker__portal .react-datepicker__day-names {
+  display: flex !important;
+  justify-content: space-around !important;
+}
+
+.react-datepicker__portal .react-datepicker__day {
+  width: calc(100% / 7 - 4px) !important;
+  max-width: 2.8rem !important;
+  line-height: 2.8rem !important;
+  margin: 2px !important;
+  font-size: 15px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+.react-datepicker__portal .react-datepicker__day-name {
+  width: calc(100% / 7 - 4px) !important;
+  max-width: 2.8rem !important;
+  margin: 2px !important;
+  font-size: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Non-portal mobile fallback */
+@media (max-width: 768px) {
+  .react-datepicker-popper {
+    z-index: 10000 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 92vw !important;
+    max-width: 380px !important;
+  }
+
+  .react-datepicker-popper .react-datepicker {
+    width: 100% !important;
+  }
+
+  .react-datepicker-popper .react-datepicker__month-container {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .react-datepicker-popper .react-datepicker__week {
+    display: flex !important;
+    justify-content: space-around !important;
+  }
+
+  .react-datepicker-popper .react-datepicker__day-names {
+    display: flex !important;
+    justify-content: space-around !important;
+  }
+
+  .react-datepicker__day {
+    width: calc(100% / 7 - 4px) !important;
+    max-width: 2.5rem !important;
+    line-height: 2.5rem !important;
+    margin: 2px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .react-datepicker__day-name {
+    width: calc(100% / 7 - 4px) !important;
+    max-width: 2.5rem !important;
+    margin: 2px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .react-datepicker__portal .react-datepicker {
+    width: 96vw !important;
+  }
+
+  .react-datepicker__portal .react-datepicker__day {
+    max-width: 2.2rem !important;
+    line-height: 2.2rem !important;
+    font-size: 13px !important;
+  }
+
+  .react-datepicker__portal .react-datepicker__day-name {
+    max-width: 2.2rem !important;
+    font-size: 10px !important;
+  }
+}
