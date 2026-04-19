@@ -1,12 +1,16 @@
 {
-  "experimentalServices": {
-    "frontend": {
-      "routePrefix": "/",
-      "framework": "vite"
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://orbitrip-backend.onrender.com/api/$1"
     },
-    "backend": {
-      "entrypoint": "backend",
-      "routePrefix": "/_/backend"
+    {
+      "source": "/uploads/(.*)",
+      "destination": "https://orbitrip-backend.onrender.com/uploads/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  }
+  ]
 }
